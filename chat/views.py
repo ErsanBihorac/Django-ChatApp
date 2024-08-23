@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .models import Chat, Message
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='/login/')
@@ -26,4 +27,11 @@ def login_view(request):
     return render(request, 'auth/login.html', {'redirect': redirect})
 
 def register_view(request):
-    return render(request)
+    if request.method == 'POST':
+        email_exists = User.objects.filter(email=request.POST.get('email')).exists()
+        if email_exists == False:
+            User.objects.create_user(username = request.POST.get('username'), email = request.POST.get('email'),password = request.POST.get('password'))
+            return HttpResponseRedirect('/login/')
+        else:
+            return render(request, 'auth/register.html', {'unavailableAccount': True})
+    return render(request, 'auth/register.html')

@@ -1,0 +1,19 @@
+{% extends "base.html" %} {% block content %}
+
+<h1>Register</h1>
+
+{% if unavailableAccount %}
+<p>E-Mail Addresse existiert bereits, bitte nutze eine andere!</p>
+{% endif %}
+
+<form method="POST" action="/register/">
+    {% csrf_token %}
+    <input type="hidden" name="redirect" value="{{ redirect }}">
+    <div><input placeholder="username" name="username" type="text" required></div>
+    <div><input placeholder="email" name="email" type="email" required></div>
+    <div><input placeholder="password" name="password" type="password" required></div>
+    <div><button>register account</button></div>
+    <a href="/login/">i already have an account</a>
+</form>
+
+{% endblock %}
